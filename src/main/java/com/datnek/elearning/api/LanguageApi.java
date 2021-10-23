@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public interface LanguageApi {
 
     @GetMapping(value = "/all")
-    ResponseEntity<GenericResultDto> findAllLanguages() throws GenericException;
+    ResponseEntity<GenericResultDto> findLanguages() throws GenericException;
 
     @GetMapping(value = "/{languageId}")
     ResponseEntity<GenericResultDto> findLanguageById(String languageId) throws GenericException;

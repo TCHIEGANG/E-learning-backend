@@ -4,10 +4,13 @@ package com.datnek.elearning.controllers;
 import com.datnek.elearning.api.LanguageApi;
 import com.datnek.elearning.lib.common.enumeration.ResponseMessage;
 import com.datnek.elearning.lib.common.exception.GenericException;
+import com.datnek.elearning.lib.common.helper.MapperHelper;
 import com.datnek.elearning.lib.common.logging.LoggingUtil;
 import com.datnek.elearning.lib.common.wrapper.GenericResultDto;
 import com.datnek.elearning.lib.dto.Language.LanguageDto;
 import com.datnek.elearning.lib.dto.Language.LanguageInfosDto;
+import com.datnek.elearning.lib.dto.Language.config.LanguageTypeDto;
+import com.datnek.elearning.lib.dto.Language.config.LevelDto;
 import com.datnek.elearning.lib.mapper.GenericMapper;
 import com.datnek.elearning.lib.mapper.language.LanguageMapper;
 import com.datnek.elearning.lib.mapper.language.config.LanguageTypeMapper;
@@ -34,7 +37,7 @@ public class LanguageController extends AbstractController implements LanguageAp
     private static final String defaultValuePage = "0";
 
     @Override
-    public ResponseEntity<GenericResultDto> findAllLanguages() throws GenericException {
+    public ResponseEntity<GenericResultDto> findLanguages() throws GenericException {
         LOGGER.info("{}" , LoggingUtil.START );
         try {
 
@@ -98,44 +101,13 @@ public class LanguageController extends AbstractController implements LanguageAp
         LOGGER.info("{}" , LoggingUtil.START);
         try {
 
-            Language language = GenericMapper.INSTANCE.asEntity(languageDto);
+            //Language language = GenericMapper.INSTANCE.asEntity(languageDto);
 
-            LanguageType languageType = new LanguageType();
-            languageType.setLocale(languageDto.getLanguageType().getLocale());
-            languageType.setIdServer(languageDto.getLanguageType().getIdServer());
-            languageType.setMessageContent(languageDto.getLanguageType().getContent());
-            languageType.setMessageKey(languageDto.getLanguageType().getKey());
-            languageType.setId(languageDto.getLanguageType().getId());
-            language.setLanguageType(languageType);
-
-            Level spokenLevel = new Level();
-            spokenLevel.setLocale(languageDto.getSpokenLevel().getLocale());
-            spokenLevel.setIdServer(languageDto.getSpokenLevel().getIdServer());
-            spokenLevel.setMessageContent(languageDto.getSpokenLevel().getContent());
-            spokenLevel.setMessageKey(languageDto.getSpokenLevel().getKey());
-            spokenLevel.setId(languageDto.getSpokenLevel().getId());
-            language.setSpokenLevel(spokenLevel);
-
-            Level writtenLevel = new Level();
-            writtenLevel.setLocale(languageDto.getWrittenLevel().getLocale());
-            writtenLevel.setIdServer(languageDto.getWrittenLevel().getIdServer());
-            writtenLevel.setMessageContent(languageDto.getWrittenLevel().getContent());
-            writtenLevel.setMessageKey(languageDto.getWrittenLevel().getKey());
-            writtenLevel.setId(languageDto.getWrittenLevel().getId());
-            language.setWrittenLevel(writtenLevel);
-
-            Level comprehensionLevel = new Level();
-            comprehensionLevel.setLocale(languageDto.getComprehensionLevel().getLocale());
-            comprehensionLevel.setIdServer(languageDto.getComprehensionLevel().getIdServer());
-            comprehensionLevel.setMessageContent(languageDto.getComprehensionLevel().getContent());
-            comprehensionLevel.setMessageKey(languageDto.getComprehensionLevel().getKey());
-            comprehensionLevel.setId(languageDto.getComprehensionLevel().getId());
-            language.setComprehensionLevel(comprehensionLevel);
-
+            Language language = MapperHelper.asEntity(languageDto);
 
             language = languageService.saveLanguage(language);
-            languageDto.setIdServer(language.getIdServer());
 
+            result.setResultObject(MapperHelper.asDto(language));
             result.setHttpStatus(HttpStatus.OK);
             result.setMessage("Success");
             LOGGER.info("{}" , LoggingUtil.END);
@@ -152,16 +124,13 @@ public class LanguageController extends AbstractController implements LanguageAp
         LOGGER.info("{}" , LoggingUtil.START );
 
         try {
-            Language language = GenericMapper.INSTANCE.asEntity(languageDto);
-           /* language.setLanguageType(languageDto.getLanguageType());
-            language.setSpokenLevel(languageDto.getSpokenLevel());
-            language.setWrittenLevel(languageDto.getWrittenLevel());
-            language.setIdServer(languageDto.getIdServer());
-            language.setComprehensionLevel(languageDto.getComprehensionLevel());*/
+            //Language language = GenericMapper.INSTANCE.asEntity(languageDto);
+
+            Language language = MapperHelper.asEntity(languageDto);
 
             language = languageService.updateLanguage(language);
 
-            result.setResultObject(GenericMapper.INSTANCE.asDto(language));
+            result.setResultObject(MapperHelper.asDto(language));
             genericResultDtoSuccess();
             LOGGER.info("{}" , LoggingUtil.END);
             return new ResponseEntity<>(result, result.getHttpStatus());
@@ -185,5 +154,7 @@ public class LanguageController extends AbstractController implements LanguageAp
             return genericResultDtoError(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+
 
 }
